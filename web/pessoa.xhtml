@@ -1,0 +1,71 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./WEB-INF/template/modelo.xhtml">
+
+            <ui:define name="content">
+                <f:event type="preRenderView" listener="#{pessoaBean.listar('F')}"/>
+                
+                <p:growl id="msg" autoUpdate="true"/>
+                <h:form id="frmPessoa">
+
+
+
+                    <p:commandButton value="Novo" actionListener="#{pessoaBean.setAccao('Guardar')}" oncomplete="PF('wdldDados').show();" update=":dlDados"/>
+
+
+                  
+
+                    <p:dataTable id="data" value="#{pessoaBean.pessoas}" var="p">
+                        <p:column headerText="Nome:">
+                            <p:outputLabel value="#{p.nome}"/>
+                        </p:column>
+
+                        <p:column headerText="Sexo">
+                            <p:outputLabel value="#{p.sexo}">
+                                <f:converter converterId="sexoConverter"/>
+                            </p:outputLabel>
+                        </p:column>
+
+                        <p:column headerText="Editar">
+                            <p:commandLink value="Editar" actionListener="#{pessoaBean.lerId(p)}" oncomplete="PF('wdldDados').show();" update=":dlDados"/>
+                        </p:column>
+
+
+                        <p:column headerText="Eliminar">
+                            <p:commandLink value="Eliminar" actionListener="#{pessoaBean.eliminar(p)}"  update="data"/>
+                        </p:column>
+
+                    </p:dataTable>
+
+                </h:form>
+
+                <p:dialog header="Dados da Pessoa" widgetVar="wdldDados" id="dlDados">
+                    <h:form>
+                        <p:outputLabel value="Nome:"/>
+                        <p:inputText id="nome" value="#{pessoaBean.pessoa.nome}"/>
+
+                        <p:outputLabel value="Nome:"/>
+                        <p:selectOneMenu value="#{pessoaBean.pessoa.sexo}">
+                            <f:selectItem itemLabel="Masculino" itemValue="M"/>
+                            <f:selectItem itemLabel="Femenino" itemValue="F"/>
+                        </p:selectOneMenu>
+
+                        <p:commandButton value="#{pessoaBean.accao}" actionListener="#{pessoaBean.operar()}" oncomplete="PF('wdldDados').hide();" update=":frmPessoa:data"/>
+                        <p:commandButton value="Cancelar"  immediate="true" oncomplete="PF('wdldDados').hide();"/>
+                    </h:form>
+                </p:dialog>
+
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>

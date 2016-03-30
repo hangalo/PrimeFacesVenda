@@ -1,0 +1,59 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+    <body>
+
+        <ui:composition template="./WEB-INF/template/modelo.xhtml">
+
+            <ui:define name="content">
+
+                 <f:event type="preRenderView" listener="#{pessoaBean.listar('F')}"/>
+                <f:event type="preRenderView" listener="#{produtoBean.listar('F')}"/>
+                
+                <p:growl id="msg" autoUpdate="true" showDetail="true"/>
+                <h:form>
+                    <p:outputLabel value="Pessoa"/>
+                    <p:selectOneMenu value="#{vendaBean.venda.pessoa}" converter="omnifaces.SelectItemsConverter">
+                        <f:selectItem noSelectionOption="true" itemLabel="Seleccione" itemValue="#{null}"/>
+                        <f:selectItems value="#{pessoaBean.pessoas}" var="pessoa" itemLabel="#{pessoa.nome}" itemValue="#{pessoa}"/>
+                    </p:selectOneMenu>
+
+
+                    <p:outputLabel value="Produto"/>
+                    <p:selectOneMenu value="#{vendaBean.produto}" converter="omnifaces.SelectItemsConverter">
+                        <f:selectItem noSelectionOption="true" itemLabel="Seleccione" itemValue="#{null}"/>
+                        <f:selectItems value="#{produtoBean.produtos}" var="produto" itemLabel="#{produto.nome}" itemValue="#{produto}"/>
+                    </p:selectOneMenu>
+
+
+                    <p:outputLabel value="Quantidade"/>
+                    <p:inputText value="#{vendaBean.quantidade}"/>   
+                    <p:commandButton value="Adicionar" actionListener="#{vendaBean.adicionar()}" update="detalhe"/>
+
+                    <p:dataTable id="detalhe" value="#{vendaBean.detalhesVenda}" var="detalhe" paginator="true" rows="10"  paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15">
+                        <p:column headerText="Produto">
+                            #{detalhe.produto.nome}
+                        </p:column>
+                        <p:column headerText="Preço">
+                            #{detalhe.produto.preco}
+                        </p:column>
+
+                        <p:column headerText="Quantidade">
+                            #{detalhe.quantidade}
+                        </p:column>
+                    </p:dataTable>
+
+                    <p:commandButton value="Registar venda" actionListener="#{vendaBean.registar()}" action="venda?faces-redirect=true"/>
+                </h:form>
+            </ui:define>
+
+        </ui:composition>
+
+    </body>
+</html>
